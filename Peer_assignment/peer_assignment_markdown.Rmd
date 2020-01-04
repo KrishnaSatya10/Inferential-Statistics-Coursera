@@ -1,11 +1,16 @@
 ---
 title: "Statistical inference with the GSS data"
 output: 
-  html_document: 
+  html_document:
+    keep_md: true 
   fig_height: 4
 highlight: pygments
 theme: united
 ---
+
+
+
+
   
 ## Setup
   
