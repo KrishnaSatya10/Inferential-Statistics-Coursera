@@ -3,10 +3,10 @@ title: "Statistical inference with the GSS data"
 knit: (function(input_file, encoding) {
   rmarkdown::render(input_file,
   encoding=encoding,
-  output_file=file.path(dirname(input_file), 'index.html'))})
+  output_file=file.path(dirname(input_file), 'Statistical_inference_with_the_GSS_data_display.html'))})
 output: 
   html_document:
-   # keep_md: true 
+   keep_md: true 
   fig_height: 4
 highlight: pygments
 theme: united

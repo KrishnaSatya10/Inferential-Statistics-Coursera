@@ -3,10 +3,10 @@ title: "Statistical inference with the GSS data"
 knit: (function(input_file, encoding) {
   rmarkdown::render(input_file,
   encoding=encoding,
-  output_file=file.path(dirname(input_file), 'index.html'))})
+  output_file=file.path(dirname(input_file), 'Statistical_inference_with_the_GSS_data_display.html'))})
 output: 
   html_document:
-   # keep_md: true 
+   keep_md: true 
   fig_height: 4
 highlight: pygments
 theme: united
@@ -23,24 +23,77 @@ theme: united
 
 Let's load the packages required for analysis before we proceed further:
 
-```{r load-packages, message = FALSE}
+
+```r
 suppressMessages(library(ggplot2, quietly = TRUE))
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.5.3
+```
+
+```
+## Warning: As of rlang 0.4.0, dplyr must be at least version 0.8.0.
+## x dplyr 0.7.8 is too old for rlang 0.4.2.
+## i Please update dplyr to the latest version.
+## i Updating packages on Windows requires precautions:
+##   <https://github.com/jennybc/what-they-forgot/issues/62>
+```
+
+```r
 suppressMessages(library(dplyr, quietly = TRUE))
+```
+
+```
+## Warning: package 'dplyr' was built under R version 3.5.2
+```
+
+```r
 suppressMessages(library(statsr, quietly = TRUE))
+```
+
+```
+## Warning: package 'statsr' was built under R version 3.5.3
+```
+
+```
+## Warning: package 'BayesFactor' was built under R version 3.5.3
+```
+
+```
+## Warning: package 'coda' was built under R version 3.5.3
+```
+
+```r
 suppressMessages(library(mosaic, quietly = TRUE))
+```
+
+```
+## Warning: package 'mosaic' was built under R version 3.5.3
+```
+
+```
+## Warning: package 'ggformula' was built under R version 3.5.3
+```
+
+```
+## Warning: package 'ggstance' was built under R version 3.5.3
+```
+
+```
+## Warning: package 'mosaicData' was built under R version 3.5.3
 ```
 We will explore the data using the `dplyr` package and visualize it using the `ggplot2` package for data visualization. In addition, we will also import `statsr`package to utilize some of the statistical modeling functionalities offered by it. 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 ### Load data
 The dataset used for this research analysis has been obtained from the General Social Survey (GSS) which contains cumulative data collected between 1972 - 2012. There are a total of 57061 observations with 114 fields, where each field corresponds to a specific question posed to the respondent. 
 
-```{r load-data}
+
+```r
 load("gss.Rdata")
 ```
 
@@ -95,19 +148,48 @@ This analysis aims to establish if there is a signficant evidence of discrepancy
 ## Part 3: Exploratory data analysis 
 
 Filtering required columns from the gss data to perform our analysis:
-```{r understand-data-a}
+
+```r
 arms_race <- gss[,c('race','natarms','year')]
 arms_race <- na.omit(arms_race)
 ```
 We focus our analysis primarily on Black and White races. Hence for ease of analysis let's exclude other races. 
-```{r filter-data-a}
+
+```r
 arms_race <- arms_race %>% filter(arms_race['race'] != "Other")
 ```
 
+```
+## Warning: package 'bindrcpp' was built under R version 3.5.2
+```
+
 Computing proportions of black and white respondents:
-```{r summary-table-a}
+
+```r
 summary(arms_race)
+```
+
+```
+##     race              natarms           year     
+##  White:26067   Too Little : 7226   Min.   :1973  
+##  Black: 4112   About Right:13209   1st Qu.:1978  
+##  Other:    0   Too Much   : 9744   Median :1987  
+##                                    Mean   :1989  
+##                                    3rd Qu.:2000  
+##                                    Max.   :2012
+```
+
+```r
 addmargins(tally(natarms~race,data = arms_race))
+```
+
+```
+##              race
+## natarms       White Black Other   Sum
+##   Too Little   6467   759     0  7226
+##   About Right 11501  1708     0 13209
+##   Too Much     8099  1645     0  9744
+##   Sum         26067  4112     0 30179
 ```
 The summary table shows that the 26067 members of White race have participated in the survey, against 4112 Black race, thereby accounting to 86.38% of total participants(calculations exclude 'other' races).
 Of these, on an average, 32.29% believe that spending is too much, 43.76% believe that it is about right, and 23.94% believe that it is too less. 
@@ -116,9 +198,12 @@ The aim of this analysis is to compare if the perception of individual races dif
 
 The mosaic plot helps us visualize data better. The sizes of blocks in this plot are in proportion to the values seen in the summary table. 
 
-``` {r plot-data-a}
+
+```r
 plot(arms_race$race,arms_race$natarms,xlab = "Race", ylab = "Perception towards military spending", col = c("lightblue","lightgreen","pink"))
 ```
+
+![](F:\Alohomora\STUDY\Coursera Certificates\Inferential Statistics Duke\Statistical_inference_with_the_GSS_data_display_files/figure-html/plot-data-a-1.png)<!-- -->
 From the plot we can see that the proportion of black respondents who bellieve the military spend is too much is higher than those observed in white population. 
 
  * * *
@@ -150,8 +235,17 @@ The p-value obtained from Chi-Square GOF test will help us decide if the differe
 
 ###Result interpretation
 
-```{r chi-square-test}
+
+```r
 chisq.test(arms_race$natarms, arms_race$race)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  arms_race$natarms and arms_race$race
+## X-squared = 153.07, df = 2, p-value < 2.2e-16
 ```
 
 +   df = (r-1) x (c-1)
